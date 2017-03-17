@@ -22,35 +22,62 @@ public class Biblioteca {
     public void afegirPublicacio(Publicacio m) throws Exception {
         /* Exercici l */
         boolean trobat = false;
-        Node n = this.publicacions;
-        if ( n == null) {                                       // no hi han editorials
+        Node editorial = this.publicacions;
+        if ( editorial == null) {                                       // no hi han editorials
             this.publicacions = new Node(m.getEditorial(), null);
             this.publicacions.inf.Inserir(m);
             return;
         }
-        if (n.editorial.equals(m.getEditorial()))                // es la primera
+        if (editorial.editorial.equals(m.getEditorial()))                // es la primera
             trobat = true;
-        while (trobat != true && n.seg != null) {
-            if (n.seg.editorial.equals(m.getEditorial())) {
+        while (trobat != true && editorial.seg != null) {
+            if (editorial.seg.editorial.equals(m.getEditorial())) {
                 trobat = true;
             } else
-                n = n.seg;
+                editorial = editorial.seg;
         }
         if (!trobat) {                                          // no s'ha trobat
-            n.seg = new Node(m.getEditorial(), null);
-            n.inf.Inserir(m);
+            editorial.seg = new Node(m.getEditorial(), null);
+            editorial.inf.Inserir(m);
         } else {                                                // editorial trobada
-            if ( n.inf.Membre(m)) throw new Exception("Existeix");
-            n.inf.Inserir(m);
+            if ( editorial.inf.Membre(m)) throw new Exception("Existeix");
+            editorial.inf.Inserir(m);
         }
     }
 
 
     public void esborrarPublicacio(Publicacio m) throws Exception {
         /* Exercici 2 */
+        Node editorial = this.publicacions;
 
+        if ( editorial == null)                                        // no hi ha cap editorial
+            throw new Exception("No hi ha cap publicació a la biblioteca");
+
+        boolean trobat = false;
+        if (editorial.editorial.equals(m.getEditorial()))                // es la primera
+            trobat = true;
+
+        while (trobat != true && editorial.seg != null) {
+            if (editorial.seg.editorial.equals(m.getEditorial()))
+                trobat = true;
+            else
+                editorial = editorial.seg;
+        }
+        if (trobat) {                                          // editorial trobat
+            editorial.inf.Esborrar(m);
+        } else {
+            throw new Exception("No s'ha trobat l'editorial de la publicació a la biblioteca");
+        }
     }
-    public void llistatPublicacions(int periodicitat) {/* Exercici 3 */}
+
+    public void llistatPublicacions(int periodicitat) {/* Exercici 3 */
+
+        Node editorial = this.publicacions;
+        while (editorial.seg != null) {
+            System.out.println(editorial.inf.toString());
+            editorial = editorial.seg;
+        }
+    }
 
     public String trobarPublicacio (int identificador)throws Exception {/* Exer 4 */ return null;}
 
