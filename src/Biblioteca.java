@@ -38,7 +38,7 @@ public class Biblioteca {
         }
         if (!trobat) {                                          // no s'ha trobat
             editorial.seg = new Node(m.getEditorial(), null);
-            editorial.inf.Inserir(m);
+            editorial.seg.inf.Inserir(m);
         } else {                                                // editorial trobada
             if ( editorial.inf.Membre(m)) throw new Exception("Existeix");
             editorial.inf.Inserir(m);
@@ -49,22 +49,28 @@ public class Biblioteca {
     public void esborrarPublicacio(Publicacio m) throws Exception {
         /* Exercici 2 */
         Node editorial = this.publicacions;
-
-        if ( editorial == null)                                        // no hi ha cap editorial
-            throw new Exception("No hi ha cap publicació a la biblioteca");
+        Node anterior = null;
 
         boolean trobat = false;
-        if (editorial.editorial.equals(m.getEditorial()))                // es la primera
-            trobat = true;
 
-        while (trobat != true && editorial.seg != null) {
-            if (editorial.seg.editorial.equals(m.getEditorial()))
+        while (trobat != true && editorial != null) {
+            if (editorial.editorial.equals(m.getEditorial()))
                 trobat = true;
-            else
+            else {
+                anterior = editorial;
                 editorial = editorial.seg;
+            }
         }
         if (trobat) {                                          // editorial trobat
             editorial.inf.Esborrar(m);
+
+            if (editorial.inf.ArbreBuit()){
+                if (anterior == null)
+                    this.publicacions = null;
+                else
+                    anterior.seg = editorial.seg;
+            }
+
         } else {
             throw new Exception("No s'ha trobat l'editorial de la publicació a la biblioteca");
         }

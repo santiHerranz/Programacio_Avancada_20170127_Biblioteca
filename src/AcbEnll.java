@@ -67,7 +67,7 @@ public class AcbEnll implements Acb { //no hereta de AbEnll
         } else if (c.compareTo(d.inf) > 0) {
             d.dret = EsborrarRecursiu(d.dret, c);
         } else {
-            // Es una fulla
+            // Es una fulla també es arrel
             if (d.esq == null && d.dret == null) {
                 d = null; //esborra la referencia
             } else if (d.esq != null && d.dret != null) {
