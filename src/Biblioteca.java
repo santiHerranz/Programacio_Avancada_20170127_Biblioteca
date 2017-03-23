@@ -21,21 +21,24 @@ public class Biblioteca {
 
     public void afegirPublicacio(Publicacio m) throws Exception {
         /* Exercici l */
-        if (   this.publicacions == null )
-            this.publicacions = new Node(m.getEditorial(), null);
-
-        Node editorial = this.publicacions;
-
         boolean trobat = false;
-        while (trobat != true && editorial != null) {
-            if (editorial.editorial.equals(m.getEditorial())) {
+        Node editorial = this.publicacions;
+        if ( editorial == null) {                                       // no hi han editorials
+            this.publicacions = new Node(m.getEditorial(), null);
+            this.publicacions.inf.Inserir(m);
+            return;
+        }
+        if (editorial.editorial.equals(m.getEditorial()))                // es la primera
+            trobat = true;
+        while (trobat != true && editorial.seg != null) {
+            if (editorial.seg.editorial.equals(m.getEditorial())) {
                 trobat = true;
             } else
                 editorial = editorial.seg;
         }
         if (!trobat) {                                          // no s'ha trobat
-            editorial = new Node(m.getEditorial(), null);
-            editorial.inf.Inserir(m);
+            editorial.seg = new Node(m.getEditorial(), null);
+            editorial.seg.inf.Inserir(m);
         } else {                                                // editorial trobada
             if ( editorial.inf.Membre(m)) throw new Exception("Existeix");
             editorial.inf.Inserir(m);
@@ -46,25 +49,26 @@ public class Biblioteca {
     public void esborrarPublicacio(Publicacio m) throws Exception {
         /* Exercici 2 */
         Node editorial = this.publicacions;
-        Node ref = this.publicacions;
+        Node anterior = null;
 
         boolean trobat = false;
+
         while (trobat != true && editorial != null) {
             if (editorial.editorial.equals(m.getEditorial()))
                 trobat = true;
             else {
-                ref = editorial;
+                anterior = editorial;
                 editorial = editorial.seg;
             }
         }
         if (trobat) {                                          // editorial trobat
             editorial.inf.Esborrar(m);
 
-            try {
-                Comparable n = editorial.inf.ArreL();
-                if ( n == null)
-                    ref.seg = editorial.seg.seg;
-            } catch (Exception e) {
+            if (editorial.inf.ArbreBuit()){
+                if (anterior == null)
+                    this.publicacions = null;
+                else
+                    anterior.seg = editorial.seg;
             }
 
         } else {
